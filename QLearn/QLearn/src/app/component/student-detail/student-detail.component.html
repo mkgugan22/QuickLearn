@@ -1,0 +1,63 @@
+<!-- Main container for student details -->
+<div class="container mt-4" *ngIf="student">
+
+  <!-- Header with title and Edit/Cancel toggle button -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="text-primary">Student Details</h4>
+    <button class="btn btn-outline-primary btn-sm" (click)="toggleEdit()">
+      {{ isEditing ? 'Cancel' : 'Edit' }}
+    </button>
+  </div>
+
+  <!-- Student details table -->
+  <table class="table table-bordered">
+    <tbody>
+      <tr>
+        <th style="width: 30%;">Student ID</th>
+        <td>{{ student.studentId }}</td>
+      </tr>
+
+      <tr>
+        <th>Name</th>
+        <td>
+          <!-- Show input if editing, otherwise show plain text -->
+          <ng-container *ngIf="isEditing; else nameView">
+            <input class="form-control" [(ngModel)]="editableStudent!.name" />
+          </ng-container>
+          <ng-template #nameView>
+            {{ student.name }}
+          </ng-template>
+        </td>
+      </tr>
+
+      <tr>
+        <th>Email</th>
+        <td>{{ student.email }}</td>
+      </tr>
+
+      <tr>
+        <th>Department</th>
+        <td>
+          <!-- Show input if editing, otherwise show plain text -->
+          <ng-container *ngIf="isEditing; else departmentView">
+            <input class="form-control" [(ngModel)]="editableStudent!.department" />
+          </ng-container>
+          <ng-template #departmentView>
+            {{ student.department }}
+          </ng-template>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Show Save button only in edit mode -->
+  <div class="text-end" *ngIf="isEditing">
+    <button class="btn btn-success" [disabled]="!hasChanges()" (click)="saveChanges()">Save</button>
+  </div>
+</div>
+
+<!-- Loading spinner while data is being fetched -->
+<div *ngIf="!student" class="text-center mt-5">
+  <div class="spinner-border text-primary" role="status"></div>
+  <p class="mt-2">Loading student details...</p>
+</div>

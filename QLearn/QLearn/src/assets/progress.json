@@ -1,0 +1,7 @@
+[
+  {
+    "studentId": "s1",
+    "courseId": "c1",
+    "completedModules": ["m1", "m2"]
+  }
+]

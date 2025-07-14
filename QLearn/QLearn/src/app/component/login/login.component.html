@@ -1,0 +1,42 @@
+<!-- Fixed Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold qlearn-brand" href="#">Q-Learn</a>
+  </div>
+</nav>
+
+<!-- Page Content with top padding -->
+<div class="d-flex justify-content-center align-items-center bg-light" style="padding-top: 80px; padding-bottom: 40px; min-height: 100vh;">
+  <div class="card shadow-lg p-4 rounded" style="width: 100%; max-width: 400px;">
+    <div class="text-center mb-4">
+      <!-- <img [src]="logo" alt="Logo" class="img-fluid" style="height: 60px;"> -->
+      <h4 class="mt-3">Login</h4>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger text-center">
+      {{ error }}
+    </div>
+
+    <form [formGroup]="signUpForm" (ngSubmit)="submit()">
+      <div class="mb-3">
+        <label class="form-label">Username</label>
+        <input type="text" formControlName="username" class="form-control" placeholder="Enter username">
+        <div *ngIf="signUpForm.get('username')?.touched && signUpForm.get('username')?.hasError('required')" class="text-danger small">
+          Username is required
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" formControlName="password" class="form-control" placeholder="Enter password">
+        <div *ngIf="signUpForm.get('password')?.touched && signUpForm.get('password')?.hasError('required')" class="text-danger small">
+          Password is required
+        </div>
+      </div>
+
+      <div class="d-grid gap-2">
+        <button type="submit" class="btn btn-primary" [disabled]="signUpForm.invalid">Login</button>
+      </div>
+    </form>
+  </div>
+</div>

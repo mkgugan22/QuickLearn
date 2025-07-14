@@ -1,0 +1,111 @@
+/* courses.component.css */
+.course-card {
+  border-radius: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background: #fff;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.course-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.course-card .card-title {
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #2c3e50;
+}
+
+input.form-control,
+select.form-select {
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  border: 1.5px solid #ced4da;
+  transition: border-color 0.3s ease;
+}
+
+input.form-control:focus,
+select.form-select:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 8px rgba(13, 110, 253, 0.3);
+  outline: none;
+}
+
+.btn-outline-primary,
+.btn-outline-secondary {
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 6px 14px;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+  background-color: #0d6efd;
+  color: white;
+  border-color: #0d6efd;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  color: white;
+  border-color: #6c757d;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .container {
+    padding: 0 15px;
+  }
+}
+
+/* courses.component.css */
+.card {
+  border-radius: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 3px solid #b3e5fc !important;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.card-text {
+  font-size: 0.95rem;
+  color: #444;
+  line-height: 1.6;
+}
+
+/* Button animation and style */
+.card .btn {
+  transition: all 0.3s ease;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+}
+
+.card .btn:hover {
+  background-color: #0d6efd;
+  color: #fff;
+}
+
+input.form-control,
+select.form-select {
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+

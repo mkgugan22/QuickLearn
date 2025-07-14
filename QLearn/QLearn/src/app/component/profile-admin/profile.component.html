@@ -1,0 +1,15 @@
+<div class="container">
+    
+<div class="container-fluid  text-center mt-3"  *ngIf="roles !== 'Student'">
+    <img [src]="profile" alt="profile">
+    <div class="content text-center mt-2">
+      
+        <p>{{name}}</p>
+        <p>{{email}}</p>
+        <p>{{role}}</p>
+    </div>
+</div>
+
+<button class="btn btn-danger btn-sm" (click)="logout()">Logout</button>
+
+</div>

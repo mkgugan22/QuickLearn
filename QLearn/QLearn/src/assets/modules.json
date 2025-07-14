@@ -1,0 +1,17 @@
+[
+  {
+    "courseId": "c1",
+    "modules": [
+      { "id": "m1", "title": "Introduction to DS" },
+      { "id": "m2", "title": "Data Cleaning" },
+      { "id": "m3", "title": "Visualization Basics" }
+    ]
+  },
+  {
+    "courseId": "c2",
+    "modules": [
+      { "id": "m1", "title": "Business Metrics" },
+      { "id": "m2", "title": "Data Reports" }
+    ]
+  }
+]

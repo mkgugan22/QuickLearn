@@ -1,0 +1,100 @@
+.dashboard {
+ 
+  margin-top: 100px;
+/*   background: linear-gradient(to top right, #0c76a7, #ebefef); */ /* Softer, airy gradient */
+}
+ 
+/* Dashboard Boxes */
+.dash-box {
+  border-radius: 15px;
+  margin: 10px;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.9); /* Lighter glass effect */
+  border: 3px solid #cce7ff;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+ 
+.dash-box:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+ 
+/* Icons */
+.dash-box .icon {
+  font-size: 2.5rem;
+  color: #00bcd4;
+  animation: softPulse 1s infinite ease-in-out;
+}
+ 
+@keyframes softPulse {
+  0% { transform: scale(1); opacity: 0.9; }
+  50% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.9; }
+}
+ 
+/* Charts Section */
+.chart1, .chart {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  border: 3px solid #b3e5fc;
+  padding: 10px;
+  height: 280px;
+  margin: 10px;
+    width: 100%;
+}
+.chart2{
+  border: 3px solid #b3e5fc;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+   padding: 15px;
+  height: 280px;
+  width: 100%;
+ 
+ display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 10px;
+}
+ 
+.chart:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+}
+ 
+/* Recommended Courses */
+.border.rounded-3 {
+  background: rgba(245, 255, 250, 0.85); /* Softer glass effect */
+  border: 3px solid #a5d6a7;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.07);
+}
+ 
+.border.rounded-3:hover {
+  transform: scale(1.02);
+  background: rgba(245, 255, 250, 1);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+}
+ 
+/* Background Animation */
+body {
+  background: linear-gradient(135deg, #e0f2f1, #fafafa);
+  background-size: 600% 600%;
+  animation: smoothBackground 15s infinite alternate ease-in-out;
+}
+ 
+@keyframes smoothBackground {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.card{
+  border: 3px solid #b3e5fc !important;
+}
+.card:hover{
+ 
+  transform: scale(1.03);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+ 
+}

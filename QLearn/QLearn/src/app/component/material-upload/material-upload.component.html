@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>Upload PDF material</h1>
+
+<div mat-dialog-content>
+  <input type="file" accept="application/pdf" (change)="onFile($event)" />
+
+  <p *ngIf="progress">{{ progress }}</p>
+
+  <mat-list *ngIf="data.course.pdfMaterials?.length">
+    <mat-list-item *ngFor="let m of data.course.pdfMaterials">
+      <div class="file-item">
+        <a [href]="api + m.pdfPath" target="_blank">{{ m.originalName }}</a>
+        <button mat-icon-button (click)="play(m.audioPath)">
+          <mat-icon>play_arrow</mat-icon>
+        </button>
+      </div>
+    </mat-list-item>
+  </mat-list>
+
+  <!-- ✅ Show audio player with controls -->
+  <audio #player controls style="margin-top: 10px; width: 100%;"></audio>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+</div>

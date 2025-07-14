@@ -1,0 +1,123 @@
+<app-nav-admin></app-nav-admin>
+
+
+<div class="container-fluid row" *ngIf="roles !== 'Student'">
+  <h4 class="text-center p-2">Students List</h4>
+  <!-- Dropdown Filter -->
+  <div class="col-md-6 mb-3 search">
+    <select class="form-select" [(ngModel)]="filterOption">
+      <option value="all">All Students</option>
+      <option value="enrolled">Enrolled Only</option>
+    </select>
+  </div>
+
+<!-- filter -->
+  <div class="col-md-6 mb-3" >
+    <input
+      type="text"
+      [(ngModel)]="searchTerm"
+      class="form-control"
+      placeholder="Search by name, email, or department"
+    />
+  </div>
+
+  <!-- button to hide form -->
+<div class="container mt-4">
+  <button class="btn btn-primary" (click)="showForm = !showForm">
+    {{ showForm ? 'Hide' : 'Add Student' }}
+  </button>
+
+  <form *ngIf="showForm" [formGroup]="studentForm" (ngSubmit)="onSubmit()" class="mt-4 border p-4 rounded shadow">
+    <!-- Name -->
+    <div class="mb-3">
+      <label>Name</label>
+      <input type="text" formControlName="name" class="form-control" />
+      <div class="text-danger" *ngIf="studentForm.get('name')?.touched && studentForm.get('name')?.invalid">
+        Name is required (min 3 chars).
+      </div>
+    </div>
+
+    <!-- Student ID -->
+<!--     <div class="mb-3">
+      <label>Student ID</label>
+      <input type="text" formControlName="studentId" class="form-control" />
+      <div class="text-danger" *ngIf="studentForm.get('studentId')?.touched && studentForm.get('studentId')?.invalid">
+        Student ID is required.
+      </div>
+    </div> -->
+
+    <!-- Department -->
+    <div class="mb-3">
+      <label>Department</label>
+        <select class="form-select"  formControlName="department">
+        <option selected disabled>Select Department</option>
+        <option value="Computer Science">Computer Science</option>
+            <option value="Mechanical Engineering">Mechanical Engineering</option>
+            <option value="Civil Engineering">Civil Engineering</option>
+            <option value="Electrical Engineering">Electrical Engineering</option>
+          <option value="Information Technology"> Information Technology</option>
+            <option value="Artificial Intelligence">Artificial Intelligence</option>
+              <option value="Electrical and Electronics Engineering">Electrical and Electronics Engineering</option>
+       </select>
+      <div class="text-danger" *ngIf="studentForm.get('department')?.touched && studentForm.get('department')?.invalid">
+        Department is required.
+      </div>
+    </div>
+
+    <!-- Email -->
+    <div class="mb-3">
+      <label>Email</label>
+      <input type="email" formControlName="email" class="form-control" />
+      <div class="text-danger" *ngIf="studentForm.get('email')?.touched && studentForm.get('email')?.invalid">
+        Valid email is required.
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">Submit</button>
+  </form>
+</div>
+
+
+
+<!-- card to display -->
+<div class="container-fluid row mt-2">
+  <div class="col-md-4 mb-4" *ngFor="let student of filteredStudents(); let i = index">
+    <div class="card h-100 shadow-sm" data-aos="fade-up" data-aos-duration="800">
+      <div class="card-body">
+        <ng-container *ngIf="editIndex !== i">
+          <h5 class="card-title text-primary">{{ student.name }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ student.studentId }}</h6>
+          <p class="card-text">
+            <strong>Department:</strong> {{ student.department }}<br />
+            <strong>Email:</strong> {{ student.email }}<br />
+            <strong>Courses:</strong> {{ student.enrolledCourses.join(', ') }}
+          </p>
+          <button (click)="editStudent(i)" class="btn btn-sm btn-outline-primary">Edit</button>
+        </ng-container>
+
+        <div *ngIf="editIndex === i">
+          <input [(ngModel)]="student.name" class="form-control mb-2" />
+              <select class="form-select form-control mb-2"  [(ngModel)]="student.department" >
+        <option selected disabled>Select Department</option>
+        <option value="Computer Science">Computer Science</option>
+            <option value="Mechanical Engineering">Mechanical Engineering</option>
+            <option value="Civil Engineering">Civil Engineering</option>
+            <option value="Electrical Engineering">Electrical Engineering</option>
+          <option value="Information Technology"> Information Technology</option>
+            <option value="Artificial Intelligence">Artificial Intelligence</option>
+              <option value="Electrical and Electronics Engineering">Electrical and Electronics Engineering</option>
+       </select>
+          <input [(ngModel)]="student.email" class="form-control mb-2" />
+          <input disabled class="form-control mb-2" placeholder="Courses, comma-separated" />
+
+          <button (click)="saveStudent(student)" class="btn btn-sm btn-outline-primary">Save</button>
+          <button (click)="editIndex = null" class="btn btn-sm btn-outline-primary">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+

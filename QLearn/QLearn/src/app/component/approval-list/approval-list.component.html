@@ -1,0 +1,101 @@
+<app-nav-admin></app-nav-admin>
+<div class="container mt-5"  *ngIf="roles !== 'Student'">
+  <h4 class="text-center mb-3">Add New Course</h4>
+  <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" class="border p-4 rounded bg-light shadow-sm">
+
+    <!-- Title -->
+    <div class="mb-3">
+      <label>Title <span class="text-danger">*</span></label>
+      <input type="text" formControlName="title" class="form-control" placeholder="Course Title">
+      <small class="text-danger" *ngIf="courseForm.get('title')?.touched && courseForm.get('title')?.errors">
+        <div *ngIf="courseForm.get('title')?.errors?.['required']">Title is required.</div>
+        <div *ngIf="courseForm.get('title')?.errors?.['minlength']">Minimum 3 characters.</div>
+        <div *ngIf="courseForm.get('title')?.errors?.['pattern']">Only letters and spaces allowed.</div>
+      </small>
+    </div>
+
+    <!-- Description -->
+    <div class="mb-3">
+      <label>Description <span class="text-danger">*</span></label>
+      <textarea formControlName="description" class="form-control" placeholder="Description"></textarea>
+      <small class="text-danger" *ngIf="courseForm.get('description')?.touched && courseForm.get('description')?.errors">
+        <div *ngIf="courseForm.get('description')?.errors?.['required']">Description is required.</div>
+        <div *ngIf="courseForm.get('description')?.errors?.['minlength']">Minimum 10 characters.</div>
+      </small>
+    </div>
+
+    <!-- Department -->
+    <div class="mb-3">
+      <label>Department <span class="text-danger">*</span></label>
+      <input type="text" formControlName="department" class="form-control" placeholder="Department">
+      <small class="text-danger" *ngIf="courseForm.get('department')?.touched && courseForm.get('department')?.errors">
+        <div *ngIf="courseForm.get('department')?.errors?.['required']">Department is required.</div>
+        <div *ngIf="courseForm.get('department')?.errors?.['pattern']">Only letters and spaces allowed.</div>
+      </small>
+    </div>
+
+    <!-- Instructor -->
+    <div class="mb-3">
+      <label>Instructor <span class="text-danger">*</span></label>
+      <input type="text" formControlName="instructor" class="form-control" placeholder="Instructor Name">
+      <small class="text-danger" *ngIf="courseForm.get('instructor')?.touched && courseForm.get('instructor')?.errors">
+        <div *ngIf="courseForm.get('instructor')?.errors?.['required']">Instructor name is required.</div>
+        <div *ngIf="courseForm.get('instructor')?.errors?.['pattern']">Only letters and spaces allowed.</div>
+      </small>
+    </div>
+
+    <!-- Material -->
+    <!-- <div class="mb-3">
+      <label>Material (PDF upload)</label>
+      <input type="file" (change)="onMaterialSelected($event)" accept="application/pdf" class="form-control" />
+    </div> -->
+
+    <!-- Category -->
+    <div class="mb-3">
+      <label>Category</label>
+      <input type="text" formControlName="category" class="form-control" placeholder="Category (optional)">
+      <small class="text-danger" *ngIf="courseForm.get('category')?.touched && courseForm.get('category')?.errors">
+        <div *ngIf="courseForm.get('category')?.errors?.['pattern']">Only letters and spaces allowed.</div>
+      </small>
+    </div>
+
+    <!-- Duration -->
+    <div class="mb-3">
+      <label>Code <span class="text-danger">*</span></label>
+      <input type="text" formControlName="duration" class="form-control" placeholder="Duration">
+      <small class="text-danger" *ngIf="courseForm.get('duration')?.touched && courseForm.get('duration')?.errors">
+        <div *ngIf="courseForm.get('duration')?.errors?.['required']">Code is required.</div>
+        <div *ngIf="courseForm.get('duration')?.errors?.['pattern']">Only letters, numbers, and spaces allowed.</div>
+      </small>
+    </div>
+
+    <!-- Rating -->
+    <div class="mb-3">
+      <label>Rating (0 to 5) <span class="text-danger">*</span></label>
+      <input type="number" formControlName="rating" class="form-control" min="0" max="5" step="0.1" placeholder="Rating">
+      <small class="text-danger" *ngIf="courseForm.get('rating')?.touched && courseForm.get('rating')?.errors">
+        <div *ngIf="courseForm.get('rating')?.errors?.['required']">Rating is required.</div>
+        <div *ngIf="courseForm.get('rating')?.errors?.['min'] || courseForm.get('rating')?.errors?.['max']">Rating must be between 0 and 5.</div>
+        <div *ngIf="courseForm.get('rating')?.errors?.['pattern']">Invalid rating format.</div>
+      </small>
+    </div>
+
+    <!-- Modules -->
+    <div class="mb-3">
+      <label>Modules <span class="text-danger">*</span></label>
+      <div formArrayName="modules">
+        <div *ngFor="let module of modules.controls; let i = index" class="input-group mb-2">
+          <input [formControlName]="i" class="form-control" placeholder="Module name">
+          <button type="button" class="btn btn-outline-danger" (click)="removeModule(i)" *ngIf="modules.length > 1">Remove</button>
+          <small class="text-danger" *ngIf="module.touched && module.errors?.['required']">
+            Module name is required.
+          </small>
+        </div>
+      </div>
+      <button type="button" class="btn btn-outline-primary btn-sm" (click)="addModule()">+ Add Module</button>
+    </div>
+
+    <button type="submit" class="btn btn-success w-100">Add Course</button>
+    <button type="button" class="btn btn-danger w-100 mt-1" (click)="close()">Close</button>
+  </form>
+</div>

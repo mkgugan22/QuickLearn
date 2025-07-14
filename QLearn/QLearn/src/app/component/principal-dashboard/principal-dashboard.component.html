@@ -1,0 +1,109 @@
+<app-nav-admin></app-nav-admin>
+<div class="dashboard" *ngIf="roles !== 'Student'">
+ 
+    <!-- Summary Cards -->
+    <div class="container-fluid mt-2" data-aos="fade-up">
+      <div class="row g-0">
+        <div class="col-md-3 col-sm-6" *ngIf="totalCourses !== undefined">
+          <div class="card dash-box shadow-sm text-center p-3">
+            <div class="icon mb-2">📚</div>
+            <h5>Total Courses</h5>
+            <h3>{{ totalCourses }}</h3>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6" *ngIf="totalInstructors !== undefined">
+          <div class="card dash-box shadow-sm text-center p-3">
+            <div class="icon mb-2">👨‍🏫</div>
+            <h5>Total Instructors</h5>
+            <h3>{{ totalInstructors }}</h3>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6" *ngIf="Students !== undefined">
+          <div class="card dash-box shadow-sm text-center p-3">
+            <div class="icon mb-2">🎓</div>
+            <h5>Total Students</h5>
+            <h3>{{ Students }}</h3>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6" *ngIf="allDepartments !== undefined">
+          <div class="card dash-box shadow-sm text-center p-3">
+            <div class="icon mb-2">✅</div>
+            <h5>Total Enrolled Students</h5>
+            <h3>{{ totalEnrolledCourses }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+</div>
+
+ 
+<div class="container-fluid row">
+  
+      <h5 class="text-primary text-center p-3">🎓 Students details and Available seats </h5>
+           <div class="chart-controls ms-2">
+ 
+<!--  <div class="btn-group mb-3" role="group">
+  <button
+    class="btn"
+    [ngClass]="chartType === 'line' ? 'btn-primary' : 'btn-outline-secondary'"
+    (click)="changeChart('line')"
+    title="Line Chart">
+    📈
+  </button>
+ 
+  <button
+    class="btn"
+    [ngClass]="chartType === 'bar' ? 'btn-primary' : 'btn-outline-secondary'"
+    (click)="changeChart('bar')"
+    title="Bar Chart">
+    📊
+  </button>
+ 
+  <button
+    class="btn"
+    [ngClass]="chartType === 'pie' ? 'btn-primary' : 'btn-outline-secondary'"
+    (click)="changeChart('pie')"
+    title="Pie Chart">
+    🥧
+  </button>
+</div>  -->
+ 
+</div>
+
+<div class="col-md-4">
+  <div echarts [options]="chartOption" class="chart1" style="height: 350px;"></div>
+
+</div>
+ <div class="col-md-4">
+  <canvas id="courseChart" class="chart2" style="height: 365px;"></canvas>
+
+ </div>
+ <div class="col-md-4">
+
+<div id="HighchartOptions"  style="height: 350px;" class="chart2"></div>
+
+
+ </div>
+  </div>
+
+ 
+<div class="container-fluid row"  data-aos="fade-up">
+        <h5 class="text-primary text-center p-3">🎓 Recommended Course</h5>
+  <div class="col-md-4" *ngFor="let recommendedCourse of recommendedCourses">
+    <div class="card shadow p-3 mb-4 rounded border-primary border-2">
+ 
+      <h6>{{ recommendedCourse.courseName }}</h6>
+      <p><strong>Department:</strong> {{ recommendedCourse.department }}</p>
+      <p><strong>Start Date:</strong> {{ recommendedCourse.enrollPeriod.startDate | date:'mediumDate' }}</p>
+      <p><strong>First Module:</strong> {{ recommendedCourse.modules[0]?.title }}</p>
+    </div>
+  </div>
+</div>

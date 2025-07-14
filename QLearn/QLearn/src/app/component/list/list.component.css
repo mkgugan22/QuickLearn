@@ -1,0 +1,30 @@
+.card {
+  border-radius: 12px;
+  background: #f9fafb;
+ 
+}
+
+.list-group-item {
+  font-size: 1rem;
+  padding: 12px 20px;
+}
+
+.btn-primary {
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+}
+
+.btn-outline-secondary {
+  font-weight: 500;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #e2e6ea;
+  color: #495057;
+}
+
+.text-warning {
+  font-size: 1.2rem;
+}

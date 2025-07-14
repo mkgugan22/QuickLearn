@@ -1,0 +1,70 @@
+<!-- 🔝 Fixed Top Navbar for Student Role -->
+<nav
+  class="navbar navbar-expand-lg navbar-dark bg-primary shadow fixed-top"
+  data-aos="fade-down"
+  *ngIf="roles !== 'Admin'"
+>
+  <div class="container-fluid">
+    <!-- 📌 Brand Logo -->
+    <a class="navbar-brand fw-bold fs-4" href="#">Q-Learn Student</a>
+
+    <!-- ☰ Hamburger Button for Mobile -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavDropdown"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- 🌐 Navbar Links & Right Section -->
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNavDropdown">
+      <!-- 📚 Left: Navigation Links -->
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/courses"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            >Courses</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/mylearning"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            >My Learnings</a
+          >
+        </li>
+      </ul>
+
+      <!-- 📦 Right: Notification + Profile -->
+      <div class="d-flex align-items-center gap-3">
+        <!-- 🔔 Notification Bell -->
+        <div class="position-relative">
+  <i
+    class="bi bi-bell-fill fs-4 text-white bell-icon"
+    style="cursor: pointer;"
+    (click)="toggleNotifications()"
+  ></i>
+
+  <!-- 📩 Notification Dropdown -->
+  <div
+    class="position-absolute bg-white shadow rounded mt-2 overflow-auto z-3"
+    *ngIf="showNotifications"
+    style="right: 0; width: 320px; max-height: 300px; top: 40px;"
+  >
+    <app-notifications></app-notifications>
+  </div>
+</div>
+
+        <!-- 👤 Profile Component -->
+        <app-profile></app-profile>
+      </div>
+    </div>
+  </div>
+</nav>

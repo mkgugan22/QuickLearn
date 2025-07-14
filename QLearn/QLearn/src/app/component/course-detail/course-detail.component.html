@@ -1,0 +1,41 @@
+<!-- 🔝 Navbar -->
+<app-navbar></app-navbar>
+
+<!-- 📘 Course Details Container -->
+<div class="container mt-5 pt-5" *ngIf="course" data-aos="fade-up">
+  <!-- 📌 Header with Back Button -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="text-primary">{{ course.courseName }}</h2>
+    <button
+      class="btn btn-outline-secondary"
+      (click)="goToCoursePage()"
+      data-aos="fade-right"
+    >
+      Back to Courses
+    </button>
+  </div>
+
+  <!-- 📋 Basic Info -->
+  <p><strong>Course Code:</strong> {{ course.courseCode }}</p>
+  <p><strong>Department:</strong> {{ course.department }}</p>
+
+  <hr />
+
+  <!-- 📚 Modules List -->
+  <h4 class="mt-4">Modules</h4>
+  <ul class="list-group mb-4">
+    <li
+      class="list-group-item d-flex justify-content-between align-items-center"
+      *ngFor="let module of course.modules"
+    >
+      <span>{{ module.title }}</span>
+      <span class="badge bg-light text-dark">{{ module.description }}</span>
+    </li>
+  </ul>
+</div>
+
+<!-- 🔄 Loading Spinner -->
+<div *ngIf="!course" class="text-center mt-5">
+  <div class="spinner-border text-primary mb-3" role="status"></div>
+  <p>Loading course details...</p>
+</div>

@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" routerLink="/">Q_Learn Admin</a>
+
+    <!-- Toggler Button for small screens -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+      aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar links -->
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a routerLink="/principal-dashboard" class="nav-link text-white fw-bold">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/trainers" class="nav-link text-white fw-bold">Trainers</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/course" class="nav-link text-white fw-bold">All Courses</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/student-data" class="nav-link text-white fw-bold">Students</a>
+        </li>
+        <!-- Future Use -->
+        <!-- <li class="nav-item">
+          <a routerLink="/approval-list" class="nav-link text-white fw-bold">Requested Courses</a>
+        </li> -->
+      </ul>
+
+      <!-- Logout Button -->
+      <div class="d-flex">
+        <button class="btn btn-outline-light btn-sm rounded-pill" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,24 @@
+<!-- 🔹 Zoom Controls (Only for bar and line) -->
+<!-- 🔹 Zoom Controls (Only for Highcharts and Chart.js bar/line) -->
+<div *ngIf="(chartLib === 'highcharts' || chartLib === 'chartjs') && (chartType === 'bar' || chartType === 'line')" class="d-flex justify-content-end gap-2 mb-2">
+  <button mat-mini-fab color="primary" (click)="zoomIn()">+</button>
+  <button mat-mini-fab color="warn" (click)="zoomOut()">−</button>
+  <button mat-stroked-button color="accent" (click)="resetZoom()">Reset</button>
+</div>
+
+
+<!-- 🔹 Highcharts Container -->
+<div *ngIf="chartLib === 'highcharts'">
+  <div [id]="'highcharts-container-' + chartTitle" style="height: 300px;"></div>
+</div>
+
+
+<!-- 🔹 ECharts Container --><!-- 🔹 ECharts Container -->
+<div *ngIf="chartLib === 'echarts'" echarts [options]="echartOptions" style="height: 360px;"></div>
+
+
+
+<!-- 🔹 Chart.js Container -->
+<div *ngIf="chartLib === 'chartjs'"  style=" min-height: 300px;">
+  <canvas [id]="'chartjs-' + chartTitle"></canvas>
+</div>

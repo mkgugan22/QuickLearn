@@ -1,0 +1,28 @@
+.card {
+  border-radius: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 3px solid #b3e5fc;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  position: relative;
+  margin-left: 10px;
+
+}
+.container-fluid{
+    margin-top: 100px;
+}
+.card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.card-footer .btn {
+  border-radius: 6px;
+  font-size: 0.85rem;
+}

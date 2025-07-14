@@ -1,0 +1,58 @@
+<div class="container" *ngIf="roles !== 'Student'">
+  <h2 class="text-center">Edit Instructor</h2>
+  <form [formGroup]="instructorForm" (ngSubmit)="onSubmit()">
+   
+    <div class="mb-3">
+      <label>Instructor ID</label>
+      <input class="form-control" formControlName="instructorId" />
+      <div class="text-danger" *ngIf="instructorForm.get('instructorId')?.touched && instructorForm.get('instructorId')?.invalid">
+        Instructor ID is required.
+      </div>
+    </div>
+ 
+    <div class="mb-3">
+      <label>Name</label>
+      <input class="form-control" formControlName="name" />
+      <div class="text-danger" *ngIf="instructorForm.get('name')?.touched && instructorForm.get('name')?.invalid">
+        Name is required and must be at least 3 characters.
+      </div>
+    </div>
+ 
+    <div class="mb-3">
+      <label>Email</label>
+      <input class="form-control" formControlName="email" />
+      <div class="text-danger" *ngIf="instructorForm.get('email')?.touched && instructorForm.get('email')?.invalid">
+        <div *ngIf="instructorForm.get('email')?.errors?.['required']">Email is required.</div>
+        <div *ngIf="instructorForm.get('email')?.errors?.['email']">Enter a valid email.</div>
+      </div>
+    </div>
+ 
+    <div class="mb-3">
+      <label>Department</label>
+        <select class="form-select"  formControlName="department">
+        <option selected disabled>Select Department</option>
+        <option value="Computer Science">Computer Science</option>
+            <option value="Mechanical Engineering">Mechanical Engineering</option>
+            <option value="Civil Engineering">Civil Engineering</option>
+            <option value="Electrical Engineering">Electrical Engineering</option>
+          <option value="Information Technology"> Information Technology</option>
+            <option value="Artificial Intelligence">Artificial Intelligence</option>
+              <option value="Electrical and Electronics Engineering">Electrical and Electronics Engineering</option>
+       </select>
+      <div class="text-danger" *ngIf="instructorForm.get('department')?.touched && instructorForm.get('department')?.invalid">
+        Department is required.
+      </div>
+    </div>
+ 
+    <div class="mb-3">
+      <label>Courses Taken (comma separated)</label>
+      <input class="form-control" formControlName="coursesTaken" />
+      <div class="text-danger" *ngIf="instructorForm.get('coursesTaken')?.touched && instructorForm.get('coursesTaken')?.invalid">
+        Courses Taken is required.
+      </div>
+    </div>
+ 
+    <button class="btn btn-primary" type="submit" [disabled]="instructorForm.invalid">Update</button>
+     <button class="btn btn-danger ms-2" type="submit" (click)="close()">Close</button>
+  </form>
+</div>

@@ -1,0 +1,106 @@
+<div class="container mt-5" *ngIf="course; else notFoundTemplate">
+  <div class="card p-4 shadow-sm border-0">
+    <h3 class="text-success mb-4">{{ course.title }}</h3>
+
+    <form *ngIf="isEditing" [formGroup]="editForm" (ngSubmit)="saveCourse()">
+      <!-- Title -->
+      <div class="mb-3">
+        <label>Title <span class="text-danger">*</span></label>
+        <input type="text" formControlName="title" class="form-control">
+        <small class="text-danger" *ngIf="f['title'].touched && f['title'].errors">
+          <ng-container *ngIf="f['title'].errors?.['required']">Title is required.</ng-container>
+          <ng-container *ngIf="f['title'].errors?.['minlength']">Minimum 3 characters.</ng-container>
+          <ng-container *ngIf="f['title'].errors?.['pattern']">Only letters and spaces allowed. No numbers or special characters.</ng-container>
+        </small>
+      </div>
+
+      <!-- Description -->
+      <div class="mb-3">
+        <label>Description <span class="text-danger">*</span></label>
+        <textarea formControlName="description" class="form-control"></textarea>
+        <small class="text-danger" *ngIf="f['description'].touched && f['description'].errors">
+          <ng-container *ngIf="f['description'].errors?.['required']">Description is required.</ng-container>
+          <ng-container *ngIf="f['description'].errors?.['minlength']">Minimum 10 characters.</ng-container>
+        </small>
+      </div>
+
+      <!-- Department -->
+      <div class="mb-3">
+        <label>Department <span class="text-danger">*</span></label>
+        <input type="text" formControlName="department" class="form-control">
+        <small class="text-danger" *ngIf="f['department'].touched && f['department'].errors">
+          <ng-container *ngIf="f['department'].errors?.['required']">Department is required.</ng-container>
+          <ng-container *ngIf="f['department'].errors?.['pattern']">Only letters and spaces allowed.</ng-container>
+        </small>
+      </div>
+
+      <!-- Instructor -->
+      <div class="mb-3">
+        <label>Instructor <span class="text-danger">*</span></label>
+        <input type="text" formControlName="instructor" class="form-control">
+        <small class="text-danger" *ngIf="f['instructor'].touched && f['instructor'].errors">
+          <ng-container *ngIf="f['instructor'].errors?.['required']">Instructor name is required.</ng-container>
+          <ng-container *ngIf="f['instructor'].errors?.['pattern']">Only letters and spaces allowed.</ng-container>
+        </small>
+      </div>
+
+      <!-- Material -->
+      <div class="mb-3">
+        <label>Material</label>
+        <input type="text" formControlName="material" class="form-control">
+      </div>
+
+      <!-- Category -->
+      <div class="mb-3">
+        <label>Category</label>
+        <input type="text" formControlName="category" class="form-control">
+        <small class="text-danger" *ngIf="f['category'].touched && f['category'].errors">
+          Only letters and spaces allowed.
+        </small>
+      </div>
+
+      <!-- Duration -->
+      <div class="mb-3">
+        <label>Duration <span class="text-danger">*</span></label>
+        <input type="text" formControlName="duration" class="form-control">
+        <small class="text-danger" *ngIf="f['duration'].touched && f['duration'].errors">
+          <ng-container *ngIf="f['duration'].errors?.['required']">Duration is required.</ng-container>
+          <ng-container *ngIf="f['duration'].errors?.['pattern']">Only letters, numbers, and spaces allowed.</ng-container>
+        </small>
+      </div>
+
+      <!-- Rating -->
+      <div class="mb-3">
+        <label>Rating (0 to 5) <span class="text-danger">*</span></label>
+        <input type="number" formControlName="rating" min="0" max="5" step="0.1" class="form-control">
+        <small class="text-danger" *ngIf="f['rating'].touched && f['rating'].errors">
+          <ng-container *ngIf="f['rating'].errors?.['required']">Rating is required.</ng-container>
+          <ng-container *ngIf="f['rating'].errors?.['min'] || f['rating'].errors?.['max']">Rating must be between 0 and 5.</ng-container>
+          <ng-container *ngIf="f['rating'].errors?.['pattern']">Invalid rating format.</ng-container>
+        </small>
+      </div>
+
+      <button type="submit" class="btn btn-success me-2">Save</button>
+      <button type="button" class="btn btn-secondary" (click)="isEditing = false">Cancel</button>
+    </form>
+
+    <!-- View Mode -->
+    <div *ngIf="!isEditing">
+      <ul class="list-group list-group-flush mb-4">
+        <li class="list-group-item"><strong>Instructor:</strong> {{ course.instructor }}</li>
+        <li class="list-group-item"><strong>Category:</strong> {{ course.category }}</li>
+        <li class="list-group-item"><strong>Duration:</strong> {{ course.duration }}</li>
+        <li class="list-group-item"><strong>Rating:</strong> {{ course.rating }}</li>
+        <li class="list-group-item"><strong>Description:</strong> {{ course.description }}</li>
+      </ul>
+      <button class="btn btn-primary" (click)="enableEdit()">Edit</button>
+    </div>
+  </div>
+</div>
+
+<ng-template #notFoundTemplate>
+  <div class="container text-center mt-5 text-danger">
+    <h5>Course not found.</h5>
+    <a routerLink="/course" class="btn btn-outline-danger mt-3 px-4">Back</a>
+  </div>
+</ng-template>

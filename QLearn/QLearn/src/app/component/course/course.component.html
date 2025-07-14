@@ -1,0 +1,290 @@
+<app-nav-admin></app-nav-admin>
+
+<!-- Main wrapper for the course management section. Visible only if user is not a Student -->
+<div class=" main-content">
+  <div class="container-fluid" *ngIf="roles !== 'Student'">
+    <!-- Toolbar -->
+    <div class="toolbar row g-2 align-items-center mb-3">
+      <!-- Title -->
+      <div class="col-12 col-md-auto">
+        <h2 class="course-title mb-0">Courses</h2>
+      </div>
+
+      <!-- Actions (Create + Search + Menu) -->
+      <div class="col-12 col-md d-flex flex-wrap align-items-center justify-content-md-end gap-2">
+
+        <!-- Create Course Button -->
+        <button mat-raised-button color="primary" (click)="createNew()">
+          <mat-icon>add</mat-icon>
+          Create Course
+        </button>
+
+        <!-- Search Field -->
+        <mat-form-field *ngIf="showSearch" appearance="outline" class="m-0" style="min-width: 250px;">
+          <mat-label>Search Courses</mat-label>
+          <input matInput [(ngModel)]="filterValue" (ngModelChange)="applyFilter()"
+            placeholder="Search by name, dept, instructor id, course id, course period etc." />
+        </mat-form-field>
+
+        <!-- Options Menu -->
+        <button mat-icon-button [matMenuTriggerFor]="optionsMenu">
+          <mat-icon>menu</mat-icon>
+        </button>
+
+        <mat-menu #optionsMenu="matMenu">
+          <button mat-menu-item (click)="toggleSearch()">
+            <mat-icon style="color: #1976d2;">search</mat-icon>
+            <span>Search Filter</span>
+          </button>
+          <button mat-menu-item (click)="openStatsDialog()">
+            <mat-icon>bar_chart</mat-icon>
+            <span>Show Stats</span>
+          </button>
+          <button mat-menu-item (click)="toggleCharts()">
+  <mat-icon>insert_chart</mat-icon>
+  {{ showCharts ? 'Hide Charts' : 'Show Charts' }}
+</button>
+
+        </mat-menu>
+      </div>
+    </div>
+
+
+
+    <!-- Table -->
+    <div class="table-responsive">
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSource" matSort class="full-width-table">
+
+          <!-- Course Name -->
+          <ng-container matColumnDef="courseName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Course Name</th>
+            <td mat-cell *matCellDef="let row">
+              <ng-container *ngIf="row._editing; else viewCourseName">
+                <input matInput [(ngModel)]="row.courseName"
+                  [class.invalid]="hasOnlySymbolsOrNumbers(row.courseName)" />
+              </ng-container>
+              <ng-template #viewCourseName>{{ row.courseName }}</ng-template>
+            </td>
+          </ng-container>
+
+          <!-- Course Code -->
+          <ng-container matColumnDef="courseCode">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Course Code</th>
+            <td mat-cell *matCellDef="let row">
+              <ng-container *ngIf="row._editing; else viewCode">
+                <input matInput [(ngModel)]="row.courseCode" />
+              </ng-container>
+              <ng-template #viewCode>{{ row.courseCode }}</ng-template>
+            </td>
+          </ng-container>
+
+          <!-- Department -->
+          <ng-container matColumnDef="department">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Department</th>
+            <td mat-cell *matCellDef="let row">
+              <ng-container *ngIf="row._editing; else viewDept">
+               <mat-form-field>
+  <mat-select [(ngModel)]="row.department" panelClass="custom-select-panel">
+    
+    <!-- Existing departments -->
+    <mat-option *ngFor="let dept of departments" [value]="dept">
+      {{ dept }}
+    </mat-option>
+
+    <mat-divider></mat-divider>
+
+    <!-- Show when user clicks 'Add Department' -->
+    <mat-option *ngIf="newDeptInputVisible" class="dept-input-row" (click)="$event.stopPropagation()">
+      <div class="inline-dept-input">
+        <input
+          matInput
+          placeholder="New Department"
+          [(ngModel)]="newDeptName"
+          (keydown.enter)="confirmNewDept(row)"
+          (click)="$event.stopPropagation()"
+          autofocus
+        />
+        <button
+          mat-icon-button
+          color="primary"
+          (click)="confirmNewDept(row)"
+          [disabled]="!newDeptName.trim()"
+        >
+          <mat-icon>check</mat-icon>
+        </button>
+      </div>
+    </mat-option>
+
+    <!-- Show only when input is not visible -->
+    <mat-option *ngIf="!newDeptInputVisible" (click)="newDeptInputVisible = true">
+      <mat-icon style="margin-right: 6px;">add</mat-icon>
+      Add Department
+    </mat-option>
+    
+  </mat-select>
+</mat-form-field>
+
+
+
+              </ng-container>
+              <ng-template #viewDept>{{ row.department }}</ng-template>
+            </td>
+          </ng-container>
+
+          <!-- Instructor -->
+          <ng-container matColumnDef="instructorId">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Instructor</th>
+            <td mat-cell *matCellDef="let row">
+              <ng-container *ngIf="row._editing; else viewInstructor">
+                <mat-form-field>
+                  <mat-select [(ngModel)]="row.instructorId">
+                    <mat-option *ngFor="let instructor of instructors" [value]="instructor.instructorId">
+                      {{ instructor.instructorId }} - {{ instructor.name }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </ng-container>
+              <ng-template #viewInstructor>{{ getInstructorName(row) }}</ng-template>
+            </td>
+          </ng-container>
+
+          <!-- Total Seats -->
+          <ng-container matColumnDef="totalSeats">
+            <th mat-header-cell *matHeaderCellDef>Total Seats</th>
+            <td mat-cell *matCellDef="let row">{{ row.totalSeats }}</td>
+          </ng-container>
+
+          <!-- Seats Left -->
+          <ng-container matColumnDef="numberOfSeats">
+            <th mat-header-cell *matHeaderCellDef>Seats Left</th>
+            <td mat-cell *matCellDef="let row">
+              <ng-container *ngIf="row._editing; else viewSeats">
+                <mat-form-field>
+                  <mat-select [(ngModel)]="row.numberOfSeats">
+                    <mat-option *ngFor="let seats of seatOptions" [value]="seats">{{ seats }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </ng-container>
+              <ng-template #viewSeats>{{ row.numberOfSeats }}</ng-template>
+            </td>
+          </ng-container>
+
+          <!-- Enroll Start -->
+          <ng-container matColumnDef="enrollStart">
+            <th mat-header-cell *matHeaderCellDef>Enroll Start</th>
+            <td mat-cell *matCellDef="let row">
+              <ng-container *ngIf="row._editing; else viewStart">
+                <mat-form-field appearance="outline">
+                  <input matInput [matDatepicker]="sharedStartPicker" [(ngModel)]="row.enrollStart" [min]="minDate"
+                    (dateChange)="handleDateChange(row)" />
+                  <mat-datepicker-toggle matSuffix [for]="sharedStartPicker"></mat-datepicker-toggle>
+                </mat-form-field>
+              </ng-container>
+              <ng-template #viewStart>{{ row.enrollStart | date: 'mediumDate' }}</ng-template>
+            </td>
+          </ng-container>
+
+          <!-- Enroll End -->
+          <ng-container matColumnDef="enrollEnd">
+            <th mat-header-cell *matHeaderCellDef>Enroll End</th>
+            <td mat-cell *matCellDef="let row">
+              <ng-container *ngIf="row._editing; else viewEnd">
+                <mat-form-field appearance="outline">
+                  <input matInput [matDatepicker]="sharedEndPicker" [(ngModel)]="row.enrollEnd" [min]="minDate"
+                    (dateChange)="handleDateChange(row)" />
+                  <mat-datepicker-toggle matSuffix [for]="sharedEndPicker"></mat-datepicker-toggle>
+                </mat-form-field>
+              </ng-container>
+              <ng-template #viewEnd>{{ row.enrollEnd | date: 'mediumDate' }}</ng-template>
+            </td>
+          </ng-container>
+
+          <!-- Enrollment Progress -->
+          <ng-container matColumnDef="enrollmentProgress">
+            <th mat-header-cell *matHeaderCellDef>Enrolled</th>
+            <td mat-cell *matCellDef="let row">
+              <mat-progress-bar mode="determinate" [value]="getFillPercentage(row)" color="accent"
+                style="height: 8px; border-radius: 6px;"></mat-progress-bar>
+              <div style="font-size: 12px; margin-top: 4px;">
+                {{ getEnrolledCount(row) }} / {{ row.totalSeats }} filled
+              </div>
+            </td>
+          </ng-container>
+
+     <ng-container matColumnDef="materials">
+    <th mat-header-cell *matHeaderCellDef>Materials</th>
+    <td mat-cell *matCellDef="let row">
+      <button mat-icon-button color="primary" (click)="openMaterialDialog(row)">
+        <mat-icon>attach_file</mat-icon>
+      </button>
+      <span *ngIf="row.pdfMaterials?.length">{{ row.pdfMaterials.length }}</span>
+    </td>
+  </ng-container>
+
+          <!-- Actions -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let row">
+              <ng-container *ngIf="row._editing">
+                <button mat-icon-button class="icon-save" (click)="saveEdit(row)">
+                  <mat-icon>check</mat-icon>
+                </button>
+                <button mat-icon-button class="icon-cancel" (click)="cancelEdit(row)">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </ng-container>
+              <ng-container *ngIf="!row._editing">
+                <button mat-icon-button class="icon-edit" (click)="startEdit(row)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button class="icon-view" (click)="viewModules(row)">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                <button mat-icon-button class="icon-delete" (click)="deleteCourse(row)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </ng-container>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 50, 100]" showFirstLastButtons></mat-paginator>
+      </div>
+    </div>
+
+
+    <!-- Charts Section (2x2 Grid) -->
+    <div *ngIf="showCharts" class="col-12 col-md-auto"  id="chartSection">
+       <h2 class="course-title mb-0">Dashboard</h2>
+     </div>
+     <br><br>
+    <div *ngIf="showCharts" class="row" id="chartSection">
+   
+ <ng-container *ngFor="let data of chartBlocks">
+  <div class="col-12 col-md-6 col-lg-4 mb-4" *ngFor="let lib of chartLibraries">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h5 class="card-title text-center">{{ lib | titlecase }} – {{ data.title }}</h5>
+    <app-course-charts
+  [chartLib]="lib"
+  [chartType]="data.type"
+  [chartTitle]="data.title"
+  [chartData]="data.method"
+  [isDonut]="data.title === 'Bottom 5 Enrolled Courses'">
+</app-course-charts>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+</div>
+
+
+    <mat-datepicker #sharedStartPicker></mat-datepicker>
+    <mat-datepicker #sharedEndPicker></mat-datepicker>
+  </div>
+</div>

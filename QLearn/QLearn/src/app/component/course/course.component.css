@@ -1,0 +1,249 @@
+/* =========================
+   General Table Styling
+========================= */
+table {
+  width: 100%;
+  margin-top: 40px;
+  border-collapse: collapse;
+  background-color: #fff;
+  font-size: 14px;
+}
+ 
+table th, table td {
+  border: 1px solid #dee2e6;
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+ 
+th {
+  background-color: #f8f9fa;
+  color: #212529;
+  font-weight: 600;
+}
+ 
+/* Zebra striping */
+table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+ 
+/* =========================
+   Compact Edit Fields
+========================= */
+table mat-form-field {
+  width: 100%;
+  max-width: 180px;
+  min-width: 100px;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1.2;
+  font-size: 13px;
+}
+ 
+.mat-cell input,
+.mat-cell mat-select,
+.mat-cell .mat-form-field-infix {
+  font-size: 13px;
+  height: 28px;
+  padding: 0 6px !important;
+  box-sizing: border-box;
+}
+ 
+/* For datepicker icon */
+.mat-datepicker-toggle {
+  height: 28px;
+}
+ 
+/* Adjusting alignment */
+.mat-cell, .mat-header-cell {
+  padding: 10px 12px;
+  vertical-align: middle;
+}
+ 
+/* =========================
+   Action Button Styling
+========================= */
+.mat-icon-button {
+  width: 28px;
+  height: 28px;
+  padding: 4px;
+  margin: 0 4px;
+  transition: transform 0.2s ease;
+}
+ 
+.mat-icon-button:hover {
+  transform: scale(1.1);
+}
+ 
+.icon-view    { color: #0d6efd; }
+.icon-edit    { color: #28a745; }
+.icon-delete  { color: #dc3545; }
+.icon-save    { color: #198754; }
+.icon-cancel  { color: #6c757d; }
+ 
+/* =========================
+   Buttons (Raised Style)
+========================= */
+button[mat-raised-button] {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  box-shadow: 0 3px 6px rgba(0, 123, 255, 0.25);
+  transition: 0.3s ease-in-out;
+  background-color: #0d6efd;
+  color: #fff;
+}
+ 
+button[mat-raised-button]:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+ 
+/* =========================
+   Snackbar Feedback
+========================= */
+.snackbar-success {
+  background-color: #28a745;
+  color: white;
+}
+ 
+.snackbar-error {
+  background-color: #dc3545;
+  color: white;
+}
+ 
+/* =========================
+   Responsive Toolbar
+========================= */
+.toolbar {
+ 
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  gap: 16px;
+}
+ 
+.toolbar-actions {
+ 
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+ 
+.equal-width {
+  width: 220px;
+  height: 40px;
+}
+ 
+.filter-field {
+  width: 280px;
+}
+ 
+@media (max-width: 768px) {
+  .toolbar, .toolbar-actions {
+    justify-content: center;
+  }
+ 
+  .equal-width,
+  .filter-field,
+  button[mat-raised-button] {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+ 
+/* =========================
+   Container/Card Styling
+========================= */
+.container-fluid {
+  margin-top: 120px !important;
+  padding: 0 20px;
+}
+ 
+/* .card {
+  border-radius: 12px;
+  border: 2px solid #b3e5fc;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: 0.3s ease;
+} */
+ 
+.card:hover {
+  transform: scale(1.01);
+}
+ 
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+ 
+.card-text {
+  font-size: 0.95rem;
+  color: #555;
+}
+ 
+.card-footer .btn {
+  border-radius: 20px;
+  font-size: 0.9rem;
+  transition: 0.3s ease;
+}
+ 
+.card-footer .btn:hover {
+  background-color: #0d6efd;
+  color: #fff;
+}
+ 
+.toolbar-title {
+  flex: 1;
+}
+ 
+.course-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: #1976d2; /* Material Blue 700 */
+}
+ 
+.mat-icon-button {
+  transition: transform 0.2s ease;
+}
+.mat-icon-button:hover {
+  transform: scale(1.1);
+}
+.icon-view {
+  color: #1e88e5;
+}
+.icon-edit {
+  color: #43a047;
+}
+.icon-delete {
+  color: #e53935;
+}
+.icon-save {
+  color: #2e7d32;
+}
+.icon-cancel {
+  color: #757575;
+}
+.inline-dept-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 4px 0;
+}
+ 
+.inline-dept-input input {
+  flex: 1;
+  font-size: 14px;
+  padding: 4px 8px;
+}
+ 
+.custom-select-panel .dept-input-row {
+  padding: 8px 16px;
+}

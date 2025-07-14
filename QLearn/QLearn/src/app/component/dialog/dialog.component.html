@@ -1,0 +1,161 @@
+<!-- Only render the dialog if the user is not a Student -->
+<div class="content" *ngIf="userRole !== 'Student'">
+ 
+  <!-- =================== COURSE STATISTICS DIALOG =================== -->
+  <ng-container *ngIf="data?.type === 'course-stats'">
+    <h2 mat-dialog-title class="dialog-header">
+      📊 Course Statistics
+      <button mat-icon-button class="close-icon" (click)="onCancel()" matTooltip="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </h2>
+    <mat-dialog-content class="stats-container">
+      <div class="stat-item"><label>Total Active Courses</label><span>{{ data.activeCourses }}</span></div>
+      <div class="stat-item"><label>Total Enrolled Students</label><span>{{ data.totalEnrolled }}</span></div>
+      <div class="stat-item"><label>Average Fill Rate</label><span>{{ data.averageFillRate }}%</span></div>
+      <div class="stat-item"><label>📅 Highest Duration Course(s)</label>
+        <ul>
+          <li *ngFor="let c of data.highDuration?.longestCourses">
+            {{ c.courseName }} ({{ c.enrollPeriod.startDate | date:'mediumDate' }} → {{ c.enrollPeriod.endDate | date:'mediumDate' }})
+          </li>
+        </ul>
+      </div>
+      <div class="stat-item"><label>🎯 Maximum Seats</label>
+        <ul>
+          <li *ngFor="let c of data.maxSeats?.maxSeatsAvailableCourses">
+            {{ c.courseName }} (Seats: {{ c.numberOfSeats }})
+          </li>
+        </ul>
+      </div>
+      <div class="stat-item"><label>📉 Minimum Seats</label>
+        <ul>
+          <li *ngFor="let c of data.minSeats?.minSeatsAvailableCourses">
+            {{ c.courseName }} (Seats: {{ c.numberOfSeats }})
+          </li>
+        </ul>
+      </div>
+      <div class="stat-item"><label>📚 Courses with Largest Modules</label>
+        <ul>
+          <li *ngFor="let c of data.largeModules?.longCourses">
+            {{ c.courseName }} (Modules: {{ c.modules.length }})
+          </li>
+        </ul>
+      </div>
+    </mat-dialog-content>
+  </ng-container>
+ 
+  <!-- =================== ENROLLMENT DASHBOARD (Highcharts) =================== -->
+  <ng-container *ngIf="data?.type === 'highcharts'">
+    <h2 mat-dialog-title class="dialog-header">
+      📊 Enrollment Dashboard
+      <button mat-icon-button class="close-icon" (click)="onCancel()" matTooltip="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </h2>
+    <mat-dialog-content>
+      <div class="dashboard-grid">
+        <div class="chart-card"><h3>Top 5 Enrolled Courses</h3><div id="highchart-pie" style="height: 300px;"></div></div>
+        <div class="chart-card"><h3>Department-wise Fill Rate </h3><div id="highchart-bar" style="height: 300px;"></div></div>
+    <div class="chart-card">
+  <h3>📈 Top 5 Longest Duration Courses (Line)</h3>
+  <div id="highchart-line" style="height: 300px;"></div>
+</div>
+        <div class="chart-card"><h3>📉 Least Enrolled Courses</h3><div id="highchart-donut" style="height: 300px;"></div></div>
+      </div>
+    </mat-dialog-content>
+  </ng-container>
+ 
+  <!-- ======= MODULE DIALOG ======= -->
+  <ng-container *ngIf="data.type === 'modules'">
+    <h2 mat-dialog-title class="dialog-header">
+      {{ data.viewOnly ? 'View Modules' : 'Edit Modules' }}
+      <button mat-icon-button class="close-icon" (click)="onCancel()" matTooltip="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </h2>
+    <mat-dialog-content>
+      <div class="dialog-container">
+        <div *ngIf="modules.length > 0; else noModules">
+          <div *ngFor="let module of modules; let i = index" class="module-card">
+            <mat-form-field appearance="fill" class="full-width form-group">
+              <mat-label>Module Title</mat-label>
+              <input matInput [(ngModel)]="module.title" [disabled]="data.viewOnly ?? false" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="full-width form-group">
+              <mat-label>Module Description</mat-label>
+              <textarea matInput rows="3" [(ngModel)]="module.description" [disabled]="data.viewOnly ?? false"></textarea>
+            </mat-form-field>
+            <ng-container *ngIf="!data.viewOnly">
+              <mat-form-field appearance="fill" class="full-width form-group">
+                <mat-label>Link</mat-label>
+                <input matInput [(ngModel)]="module.youtubeLink" />
+              </mat-form-field>
+            </ng-container>
+            <ng-container *ngIf="data.viewOnly && module.youtubeLink?.trim()">
+              <div class="form-group">
+                <div class="video-wrapper"><div id="youtube-player-{{ i }}"></div></div>
+                <div class="video-controls">
+                  <button mat-icon-button (click)="rewind(i)" matTooltip="Rewind 10s"><mat-icon>fast_rewind</mat-icon></button>
+                  <button mat-icon-button (click)="togglePlayPause(i)" matTooltip="Play/Pause">
+                    <mat-icon>{{ isPlaying[i] ? 'pause' : 'play_arrow' }}</mat-icon>
+                  </button>
+                  <button mat-icon-button (click)="forward(i)" matTooltip="Forward 10s"><mat-icon>fast_forward</mat-icon></button>
+                  <button mat-icon-button (click)="toggleFullscreen(i)" matTooltip="Toggle Fullscreen">
+                    <mat-icon>{{ isFullscreen[i] ? 'fullscreen_exit' : 'fullscreen' }}</mat-icon>
+                  </button>
+                  <input type="range" min="0" max="100" [value]="volumes[i] || 50" (input)="onVolumeChange(i, $event)" style="width: 100px;" />
+                </div>
+              </div>
+            </ng-container>
+            <div *ngIf="!data.viewOnly" style="text-align: right; margin-top: 10px;">
+              <button mat-icon-button color="warn" (click)="removeModule(i)"><mat-icon>delete</mat-icon></button>
+            </div>
+          </div>
+        </div>
+        <ng-template #noModules><p>No modules found. Click <strong>Add Module</strong> to get started.</p></ng-template>
+        <div *ngIf="!data.viewOnly" class="form-group">
+          <button mat-raised-button color="primary" (click)="addModule()">Add Module</button>
+        </div>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end" *ngIf="!data.viewOnly">
+      <button mat-button (click)="closeModuleDialog()">Cancel</button>
+      <button mat-button color="primary" (click)="saveModules()">Save</button>
+    </mat-dialog-actions>
+  </ng-container>
+ 
+  <!-- ======= DELETE CONFIRMATION ======= -->
+  <ng-container *ngIf="data.type === 'delete'">
+    <h2 mat-dialog-title class="dialog-header">
+      Confirm Deletion
+      <button mat-icon-button class="close-icon" (click)="onCancel()" matTooltip="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </h2>
+    <mat-dialog-content>
+      <p>{{ data.message || ('Are you sure you want to delete ' + (data.course?.courseName || 'this item') + '?') }}</p>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="onCancel()">Cancel</button>
+      <button mat-button color="warn" (click)="onDelete()">Delete</button>
+    </mat-dialog-actions>
+  </ng-container>
+ 
+  <!-- ======= GENERIC CONFIRM ======= -->
+  <ng-container *ngIf="data.type === 'confirm-delete'">
+    <h2 mat-dialog-title class="dialog-header">
+      Confirm
+      <button mat-icon-button class="close-icon" (click)="onCancel()" matTooltip="Close">
+        <mat-icon>close</mat-icon>
+      </button>
+    </h2>
+    <mat-dialog-content>
+      <p style="font-size: 16px; font-weight: 500;">{{ data.message }}</p>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button mat-button color="primary" (click)="onCancel()">Cancel</button>
+      <button mat-raised-button color="warn" (click)="onDelete()">Delete</button>
+    </mat-dialog-actions>
+  </ng-container>
+ 
+</div>

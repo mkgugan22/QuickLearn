@@ -1,0 +1,16 @@
+[
+  {
+    "id": "c1",
+    "title": "Data Science Basics",
+    "description": "Learn the basics of data science.",
+    "department": "Computer Science",
+    "rating": 4.5
+  },
+  {
+    "id": "c2",
+    "title": "Business Analytics",
+    "description": "Intro to business analysis techniques.",
+    "department": "Business",
+    "rating": 4.0
+  }
+]

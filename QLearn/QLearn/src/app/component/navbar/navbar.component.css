@@ -1,0 +1,104 @@
+/* Typography & Branding */
+.navbar-brand {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navbar Links */
+.nav-link {
+  font-weight: 500;
+  font-size: 1rem;
+  transition: 0.3s ease-in-out;
+}
+
+.nav-link:hover {
+  color: #ffdd57 !important;
+}
+
+.nav-link.active {
+  font-weight: bold;
+  color: #ffd700 !important;
+  border-bottom: 2px solid #ffd700;
+}
+
+/* Profile Icon (First Letter Circle) */
+.navbar {
+  background-color: #343a40;
+  padding: 10px 20px;
+}
+
+.profile-menu {
+  position: relative;
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.profile-icon {
+  width: 40px;
+  height: 40px;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 40px;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+  font-size: 18px;
+  transition: background-color 0.3s ease;
+}
+
+.profile-icon:hover {
+  background-color: #0056b3;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background-color: #fff;
+  min-width: 160px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  display: none;
+  z-index: 999;
+  padding: 8px 0;
+  list-style: none;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 10px 16px;
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bell-icon {
+  transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.bell-icon:hover {
+  color: #ffc107; /* Bootstrap warning color (yellow) */
+  transform: scale(1.2); /* Slight zoom effect */
+}

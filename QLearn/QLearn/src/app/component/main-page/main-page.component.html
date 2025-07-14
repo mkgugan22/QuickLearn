@@ -1,0 +1,21 @@
+<div class="container-fluid p-0">
+
+  <!-- 🔵 Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand fw-bold ps-3" href="#">QLearn</a>
+    </div>
+  </nav>
+
+  <!-- 🖼️ Hero Section with Background -->
+  <div class="position-relative">
+    <img [src]="background" alt="Background" class="w-100 background-image img-fluid" style="max-height: 100vh; object-fit: cover;">
+
+    <div class="overlay-text text-white text-center position-absolute top-50 start-50 translate-middle">
+      <h1 class="display-4 fw-bold">Welcome to QLearn</h1>
+      <p class="fs-5">Your journey to knowledge starts here</p>
+      <button class="btn btn-light btn-lg mt-3" (click)="login()">Explore Courses</button>
+    </div>
+  </div>
+
+</div>

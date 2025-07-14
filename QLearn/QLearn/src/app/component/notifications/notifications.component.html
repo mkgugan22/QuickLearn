@@ -1,0 +1,10 @@
+<div class="p-2" *ngIf="notifications.length > 0; else noNotes">
+  <div *ngFor="let note of notifications" class="border-bottom py-2 px-3">
+    <p class="mb-1 fw-semibold text-dark">{{ note.message }}</p>
+    <small class="text-muted">{{ note.date | date: 'dd MMM yyyy, h:mm a' }}</small>
+  </div>
+</div>
+
+<ng-template #noNotes>
+  <div class="p-3 text-muted text-center">No notifications yet.</div>
+</ng-template>
