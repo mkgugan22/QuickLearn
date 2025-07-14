@@ -1,0 +1,42 @@
+{
+  "name": "quicklearn",
+  "version": "1.0.0",
+  "description": "Advanced Student Course Management System - A comprehensive full-stack web application for managing courses, students, and educational content",
+  "main": "index.js",
+  "scripts": {
+    "install-all": "npm run install-frontend && npm run install-backend && npm run install-auth",
+    "install-frontend": "cd QLearn/QLearn && npm install",
+    "install-backend": "cd QLearn/backend && npm install",
+    "install-auth": "cd QLearn/auth-backend && npm install",
+    "start": "concurrently \"npm run start-backend\" \"npm run start-auth\" \"npm run start-frontend\"",
+    "start-frontend": "cd QLearn/QLearn && ng serve",
+    "start-backend": "cd QLearn/backend && node server.js",
+    "start-auth": "cd QLearn/auth-backend && npm start",
+    "build": "cd QLearn/QLearn && ng build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "student-management",
+    "course-management",
+    "angular",
+    "nodejs",
+    "mongodb",
+    "express",
+    "education",
+    "learning-platform",
+    "fullstack"
+  ],
+  "author": "mkgugan22",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mkgugan22/QuickLearn.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mkgugan22/QuickLearn/issues"
+  },
+  "homepage": "https://github.com/mkgugan22/QuickLearn#readme",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
