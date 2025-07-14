@@ -10,6 +10,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDividerModule } from '@angular/material/divider';
 import { FormsModule } from '@angular/forms';
 import { PrincipalServiceService } from '../../service/principal-service.service';
 
@@ -24,6 +25,7 @@ import { PrincipalServiceService } from '../../service/principal-service.service
     MatCheckboxModule,
     MatExpansionModule,
     MatProgressSpinnerModule,
+    MatDividerModule,
     FormsModule
   ],
   templateUrl: './material-upload.component.html',
