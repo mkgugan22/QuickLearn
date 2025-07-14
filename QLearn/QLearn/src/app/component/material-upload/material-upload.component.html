@@ -1,25 +1,118 @@
-<h1 mat-dialog-title>Upload PDF material</h1>
+<h1 mat-dialog-title>📚 Course Materials Manager</h1>
 
-<div mat-dialog-content>
-  <input type="file" accept="application/pdf" (change)="onFile($event)" />
-
-  <p *ngIf="progress">{{ progress }}</p>
-
-  <mat-list *ngIf="data.course.pdfMaterials?.length">
-    <mat-list-item *ngFor="let m of data.course.pdfMaterials">
-      <div class="file-item">
-        <a [href]="api + m.pdfPath" target="_blank">{{ m.originalName }}</a>
-        <button mat-icon-button (click)="play(m.audioPath)">
-          <mat-icon>play_arrow</mat-icon>
-        </button>
+<div mat-dialog-content class="material-dialog-content">
+  <!-- Language Selection Section -->
+  <mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        🌐 Select Audio Languages
+      </mat-panel-title>
+      <mat-panel-description>
+        Choose languages for audio generation ({{ getSelectedLanguageNames().join(', ') }})
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    
+    <div class="language-grid">
+      <div *ngFor="let lang of supportedLanguages | keyvalue" class="language-item">
+        <mat-checkbox 
+          [checked]="selectedLanguages.includes(lang.key)"
+          (change)="onLanguageChange(lang.key, $event.checked)">
+          <span class="language-name">{{ lang.value.name }}</span>
+          <span class="language-code">({{ lang.key }})</span>
+        </mat-checkbox>
       </div>
-    </mat-list-item>
-  </mat-list>
+    </div>
+  </mat-expansion-panel>
 
-  <!-- ✅ Show audio player with controls -->
-  <audio #player controls style="margin-top: 10px; width: 100%;"></audio>
+  <!-- File Upload Section -->
+  <mat-card class="upload-card">
+    <mat-card-header>
+      <mat-card-title>📤 Upload New Material</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="upload-section">
+        <input 
+          type="file" 
+          accept="application/pdf" 
+          (change)="onFile($event)" 
+          [disabled]="isUploading"
+          class="file-input" />
+        
+        <div *ngIf="isUploading" class="upload-progress">
+          <mat-spinner diameter="30"></mat-spinner>
+          <p>{{ progress }}</p>
+        </div>
+        
+        <div *ngIf="!isUploading && progress" class="upload-result">
+          <p [class.success]="progress.includes('successful')" [class.error]="progress.includes('failed')">
+            {{ progress }}
+          </p>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Existing Materials Section -->
+  <mat-card *ngIf="data.course.pdfMaterials?.length" class="materials-card">
+    <mat-card-header>
+      <mat-card-title>📋 Existing Materials ({{ data.course.pdfMaterials.length }})</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div *ngFor="let material of data.course.pdfMaterials; let i = index" class="material-item">
+        <div class="material-header">
+          <h3>{{ material.originalName }}</h3>
+          <div class="material-actions">
+            <button mat-icon-button (click)="viewPdf(material.pdfPath)" matTooltip="View PDF">
+              <mat-icon>picture_as_pdf</mat-icon>
+            </button>
+            <button mat-icon-button (click)="deleteMaterial(i)" matTooltip="Delete Material" color="warn">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+        
+        <div class="material-info">
+          <small>Uploaded: {{ material.uploadDate | date:'medium' }}</small>
+          <small *ngIf="material.extractedText">Preview: {{ material.extractedText.substring(0, 100) }}...</small>
+        </div>
+        
+        <div class="audio-controls" *ngIf="material.audioFiles?.length">
+          <h4>🎵 Available Audio Languages:</h4>
+          <div class="audio-buttons">
+            <button 
+              *ngFor="let audioFile of material.audioFiles" 
+              mat-raised-button 
+              [color]="currentlyPlaying === audioFile.audioPath ? 'accent' : 'primary'"
+              (click)="playAudio(audioFile.audioPath, audioFile.languageName)"
+              class="audio-button">
+              <mat-icon>{{ currentlyPlaying === audioFile.audioPath ? 'pause' : 'play_arrow' }}</mat-icon>
+              {{ audioFile.languageName }}
+            </button>
+          </div>
+        </div>
+        
+        <mat-divider *ngIf="i < data.course.pdfMaterials.length - 1"></mat-divider>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Audio Player -->
+  <audio 
+    #player 
+    controls 
+    (ended)="onAudioEnded()"
+    style="margin-top: 10px; width: 100%; display: none;">
+  </audio>
+
+  <!-- Control Panel -->
+  <div class="control-panel" *ngIf="currentlyPlaying">
+    <button mat-raised-button color="warn" (click)="stopAudio()">
+      <mat-icon>stop</mat-icon>
+      Stop Audio
+    </button>
+  </div>
 </div>
 
-<div mat-dialog-actions>
+<div mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Close</button>
 </div>

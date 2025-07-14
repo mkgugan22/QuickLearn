@@ -19,11 +19,19 @@ module.exports = mongoose.model('Course', courseSchema);
 
 // models/allCourse.js (Mongoose schema)
 const mongoose = require('mongoose');
+const audioFileSchema = new mongoose.Schema({
+  languageCode: String,         // en-US, hi-IN, ta-IN, etc.
+  languageName: String,         // English, Hindi, Tamil, etc.
+  audioName: String,            // lecture1_en-US.mp3
+  audioPath: String             // /uploads/audio/<hashed>_en-US.mp3
+}, { _id: false });
+
 const pdfMaterialSchema = new mongoose.Schema({
   originalName: String,         // lecture1.pdf
   pdfPath: String,              // /uploads/pdfs/<hashed>.pdf
-  audioName: String,            // lecture1.mp3
-  audioPath: String             // /uploads/audio/<hashed>.mp3
+  audioFiles: [audioFileSchema], // Array of audio files in different languages
+  uploadDate: { type: Date, default: Date.now },
+  extractedText: String         // First 1000 chars of PDF text for preview
 }, { _id: false });
 
 const courseSchema = new mongoose.Schema({

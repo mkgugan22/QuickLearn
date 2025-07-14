@@ -103,12 +103,27 @@ getCoursesWithLargeModules() {
 getCourseEnrollPeriod(id: string) {
   return this.http.get<any>(`${this.baseUrl}/course/enrollDate/${id}`);
 }
-/** Upload a PDF hand‑out; backend converts it to MP3 and
-   *  returns the updated pdfMaterials array for the course. */
-  uploadCourseMaterial(courseId: string, file: File) {
+/** Get supported languages for audio generation */
+  getSupportedLanguages() {
+    return this.http.get(`${this.baseUrl}/supported-languages`);
+  }
+
+  /** Upload a PDF material with multi-language audio support */
+  uploadCourseMaterial(courseId: string, file: File, languages: string[] = ['en-US']) {
     const fd = new FormData();
-    fd.append('pdf', file);                                   // field name must be “pdf”
+    fd.append('pdf', file);
+    fd.append('languages', JSON.stringify(languages));
     return this.http.post(`${this.baseUrl}/${courseId}/material`, fd);
+  }
+
+  /** Delete a specific material from a course */
+  deleteCourseMaterial(courseId: string, materialIndex: number) {
+    return this.http.delete(`${this.baseUrl}/${courseId}/material/${materialIndex}`);
+  }
+
+  /** Get details of a specific material */
+  getMaterialDetails(courseId: string, materialIndex: number) {
+    return this.http.get(`${this.baseUrl}/${courseId}/material/${materialIndex}`);
   }
 
 }

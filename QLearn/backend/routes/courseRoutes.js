@@ -320,9 +320,42 @@ router.delete('/code/:courseCode', async (req, res) => {
 });
  
 
+// Language configuration for multi-language support
+const supportedLanguages = {
+  'en-US': { name: 'English', ssmlGender: 'NEUTRAL' },
+  'hi-IN': { name: 'Hindi', ssmlGender: 'NEUTRAL' },
+  'ta-IN': { name: 'Tamil', ssmlGender: 'NEUTRAL' },
+  'te-IN': { name: 'Telugu', ssmlGender: 'NEUTRAL' },
+  'mr-IN': { name: 'Marathi', ssmlGender: 'NEUTRAL' },
+  'bn-IN': { name: 'Bengali', ssmlGender: 'NEUTRAL' },
+  'gu-IN': { name: 'Gujarati', ssmlGender: 'NEUTRAL' },
+  'kn-IN': { name: 'Kannada', ssmlGender: 'NEUTRAL' },
+  'ml-IN': { name: 'Malayalam', ssmlGender: 'NEUTRAL' },
+  'pa-IN': { name: 'Punjabi', ssmlGender: 'NEUTRAL' },
+  'ur-IN': { name: 'Urdu', ssmlGender: 'NEUTRAL' },
+  'es-ES': { name: 'Spanish', ssmlGender: 'NEUTRAL' },
+  'fr-FR': { name: 'French', ssmlGender: 'NEUTRAL' },
+  'de-DE': { name: 'German', ssmlGender: 'NEUTRAL' },
+  'it-IT': { name: 'Italian', ssmlGender: 'NEUTRAL' },
+  'ja-JP': { name: 'Japanese', ssmlGender: 'NEUTRAL' },
+  'ko-KR': { name: 'Korean', ssmlGender: 'NEUTRAL' },
+  'pt-BR': { name: 'Portuguese', ssmlGender: 'NEUTRAL' },
+  'ru-RU': { name: 'Russian', ssmlGender: 'NEUTRAL' },
+  'ar-SA': { name: 'Arabic', ssmlGender: 'NEUTRAL' },
+  'zh-CN': { name: 'Chinese (Simplified)', ssmlGender: 'NEUTRAL' }
+};
+
+// Get supported languages endpoint
+router.get('/supported-languages', (req, res) => {
+  res.json(supportedLanguages);
+});
+
+// Enhanced material upload with multi-language support
 router.post('/:courseId/material', pdfUpload.single('pdf'), async (req, res) => {
   try {
     const { courseId } = req.params;
+    const { languages = ['en-US'] } = req.body; // Default to English if no languages specified
+    
     const course = await Course.findById(courseId);
     if (!course) return res.status(404).json({ msg: 'Course not found' });
 
@@ -335,28 +368,126 @@ router.post('/:courseId/material', pdfUpload.single('pdf'), async (req, res) => 
       return res.status(400).json({ msg: 'PDF has no readable text' });
     }
 
-    const [response] = await client.synthesizeSpeech({
-      input: { text: text.slice(0, 4500) },
-      voice: { languageCode: 'en-US', ssmlGender: 'NEUTRAL' },
-      audioConfig: { audioEncoding: 'MP3' }
-    });
+    // Generate audio for each requested language
+    const audioFiles = [];
+    const languageArray = typeof languages === 'string' ? [languages] : languages;
+    
+    for (const languageCode of languageArray) {
+      if (!supportedLanguages[languageCode]) {
+        console.warn(`Unsupported language: ${languageCode}`);
+        continue;
+      }
 
-    const audioName = path.basename(req.file.filename, '.pdf') + '.mp3';
-    const audioPath = path.join('uploads/audio', audioName);
-    await fs.writeFile(audioPath, response.audioContent, 'binary');
+      try {
+        const [response] = await client.synthesizeSpeech({
+          input: { text: text.slice(0, 4500) },
+          voice: { 
+            languageCode: languageCode, 
+            ssmlGender: supportedLanguages[languageCode].ssmlGender 
+          },
+          audioConfig: { audioEncoding: 'MP3' }
+        });
 
-    course.pdfMaterials.push({
+        const audioName = `${path.basename(req.file.filename, '.pdf')}_${languageCode}.mp3`;
+        const audioPath = path.join('uploads/audio', audioName);
+        await fs.writeFile(audioPath, response.audioContent, 'binary');
+
+        audioFiles.push({
+          languageCode,
+          languageName: supportedLanguages[languageCode].name,
+          audioName,
+          audioPath: '/' + audioPath
+        });
+      } catch (audioErr) {
+        console.error(`Failed to generate audio for ${languageCode}:`, audioErr);
+      }
+    }
+
+    // Create material object with multi-language audio
+    const material = {
       originalName: req.file.originalname,
       pdfPath: '/' + req.file.path,
-      audioName,
-      audioPath: '/' + audioPath
-    });
+      audioFiles,
+      uploadDate: new Date(),
+      extractedText: text.slice(0, 1000) // Store first 1000 chars for preview
+    };
 
+    course.pdfMaterials.push(material);
     await course.save();
-    res.status(201).json({ msg: 'Material uploaded', pdfMaterials: course.pdfMaterials });
+    
+    res.status(201).json({ 
+      msg: 'Material uploaded with multi-language audio', 
+      pdfMaterials: course.pdfMaterials,
+      generatedLanguages: audioFiles.map(af => af.languageName)
+    });
   } catch (err) {
     console.error('❌ Upload failed:', err);
     res.status(500).json({ error: 'Upload failed', details: err.message });
+  }
+});
+
+// Delete material endpoint
+router.delete('/:courseId/material/:materialIndex', async (req, res) => {
+  try {
+    const { courseId, materialIndex } = req.params;
+    const course = await Course.findById(courseId);
+    
+    if (!course) return res.status(404).json({ msg: 'Course not found' });
+    
+    const materialIdx = parseInt(materialIndex);
+    if (materialIdx < 0 || materialIdx >= course.pdfMaterials.length) {
+      return res.status(400).json({ msg: 'Invalid material index' });
+    }
+
+    const material = course.pdfMaterials[materialIdx];
+    
+    // Delete PDF file
+    try {
+      await fs.unlink(material.pdfPath.substring(1)); // Remove leading '/'
+    } catch (err) {
+      console.warn('Failed to delete PDF file:', err);
+    }
+
+    // Delete audio files
+    if (material.audioFiles) {
+      for (const audioFile of material.audioFiles) {
+        try {
+          await fs.unlink(audioFile.audioPath.substring(1)); // Remove leading '/'
+        } catch (err) {
+          console.warn('Failed to delete audio file:', err);
+        }
+      }
+    }
+
+    // Remove from array
+    course.pdfMaterials.splice(materialIdx, 1);
+    await course.save();
+    
+    res.json({ msg: 'Material deleted successfully', pdfMaterials: course.pdfMaterials });
+  } catch (err) {
+    console.error('❌ Delete failed:', err);
+    res.status(500).json({ error: 'Delete failed', details: err.message });
+  }
+});
+
+// Get material details endpoint
+router.get('/:courseId/material/:materialIndex', async (req, res) => {
+  try {
+    const { courseId, materialIndex } = req.params;
+    const course = await Course.findById(courseId);
+    
+    if (!course) return res.status(404).json({ msg: 'Course not found' });
+    
+    const materialIdx = parseInt(materialIndex);
+    if (materialIdx < 0 || materialIdx >= course.pdfMaterials.length) {
+      return res.status(400).json({ msg: 'Invalid material index' });
+    }
+
+    const material = course.pdfMaterials[materialIdx];
+    res.json(material);
+  } catch (err) {
+    console.error('❌ Get material failed:', err);
+    res.status(500).json({ error: 'Get material failed', details: err.message });
   }
 });
 
